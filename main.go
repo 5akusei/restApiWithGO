@@ -1,18 +1,12 @@
-//comileDaemon es un paquete que sirve para que despues de hacer algun cambio se reinicie el server.
-//go get github.com/githubnemo/CompileDaemon <- para traer el paquete
-//CompileDaemon -command="nombreProyecto.exe" <- para ejecutarlo
-
-// go get github.com/gorilla/mux <- para traer el paquete
-
 package main
 
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil" // sirve para manejar las entradas y salidas a nuestro servidor
+	"io/ioutil" // sirve para manejar las entradas y salidas
 	"log"
 	"net/http" //para crear el servidor http
-	"strconv" // para convertir
+	"strconv"  // para convertir
 
 	"github.com/gorilla/mux" //importacion del modulo mux, sirve para definir rutas
 )
@@ -43,6 +37,7 @@ func indexRoute(w http.ResponseWriter, r *http.Request) {
 func createTask(w http.ResponseWriter, r *http.Request) {
 	var newTask task
 	reqBody, err := ioutil.ReadAll(r.Body)
+
 	if err != nil {
 		fmt.Fprintf(w, "Inserta una tarea con datos validos")
 	}
@@ -52,7 +47,7 @@ func createTask(w http.ResponseWriter, r *http.Request) {
 	tasks = append(tasks, newTask)
 
 	w.Header().Set("Content-Type", "application/json") //dice el tipo de contenido que va a devolver a la peticion
-	w.WriteHeader(http.StatusCreated) //devuelve el status de la accion
+	w.WriteHeader(http.StatusCreated)                  //devuelve el status de la accion
 	json.NewEncoder(w).Encode(newTask)
 
 }
@@ -101,7 +96,7 @@ func updateTask(w http.ResponseWriter, r *http.Request) {
 
 			// w.Header().Set("Content-Type", "application/json")
 			// json.NewEncoder(w).Encode(updatedTask)
-			fmt.Fprintf(w, "The task with ID %v has been updated successfully", taskID)
+			fmt.Fprintf(w, "La tarea con el ID %v se ha actalizado", taskID)
 		}
 	}
 
@@ -119,7 +114,7 @@ func deleteTask(w http.ResponseWriter, r *http.Request) {
 	for i, t := range tasks {
 		if t.ID == taskID {
 			tasks = append(tasks[:i], tasks[i+1:]...)
-			fmt.Fprintf(w, "The task with ID %v has been remove successfully", taskID)
+			fmt.Fprintf(w, "La tarea con el ID %v se ha eliminado", taskID)
 		}
 	}
 }
@@ -134,6 +129,6 @@ func main() {
 	router.HandleFunc("/tasks/{id}", deleteTask).Methods("DELETE")
 	router.HandleFunc("/tasks/{id}", updateTask).Methods("PUT")
 
-	//para crear el servidor, recibe el puerto donde va a escuchar el enrutador
+	//para crear el servidor, recibe el puerto donde va a escuchar y el enrutador
 	log.Fatal(http.ListenAndServe(":3000", router))
 }
