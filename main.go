@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil" // sirve para manejar las entradas y salidas
+	"io/ioutil" // sirve para manejar las entradas y salidas de nuestro servidor
 	"log"
 	"net/http" //para crear el servidor http
 	"strconv"  // para convertir
